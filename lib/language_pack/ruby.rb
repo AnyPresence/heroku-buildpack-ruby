@@ -484,9 +484,10 @@ WARNING
     `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
     result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
     if $?.success?
-      puts "Done installing OCI8"
+      puts "Setting OCI8 environment variables"
       ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}:$LD_LIBRARY_PATH"
-      puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR}`
+      ENV["NLS_LANG"]='AMERICAN_AMERICA.UTF8'
+      puts "Done installing OCI8"
     else
       raise "Failed to install OCI8 binaries"
     end
@@ -498,7 +499,7 @@ WARNING
       puts "Found OCI8 trigger"
       install_oci8_binaries 
     end
-    puts "AFTER\nRuby: #{`which ruby`}\nEnv #{`env`}"
+    puts "Done building native gems."
   end
   
   # runs bundler to install the dependencies
