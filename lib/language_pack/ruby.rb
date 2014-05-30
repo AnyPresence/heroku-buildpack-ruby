@@ -27,7 +27,7 @@ class LanguagePack::Ruby < LanguagePack::Base
 
   OCI8_TRIGGER_NAME = '.oracle.ini'
   ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2_with_libaio_oci8.tar.gz"
-  ORACLE_INSTANT_CLIENT_DIR = 'instant_client_11_2'
+  ORACLE_INSTANT_CLIENT_DIR = 'vendor/instant_client_11_2'
   
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
@@ -483,10 +483,9 @@ WARNING
   end
     
   def install_oci8_binaries
-    instant_client = File.join(Dir.pwd,ORACLE_INSTANT_CLIENT_DIR)
-    `mkdir #{instant_client}` unless Dir.exists?(instant_client)
-    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{instant_client} -f - `
-    puts `export LD_LIBRARY_PATH=#{instant_client}`
+    `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
+    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
+    puts `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR}`
   end
   
   def build_native_gems
