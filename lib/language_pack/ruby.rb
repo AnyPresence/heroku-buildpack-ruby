@@ -482,8 +482,9 @@ WARNING
   end
     
   def install_oci8_binaries
-    result = `curl --fail --retry 3 --retry-delay 1 #{ORACLE_INSTANT_CLIENT_TGZ_URL} - | tar zxf - 2&>1`
-    puts `ls -alh .`
+    `mkdir #{ORACLE_INSTANT_CLIENT_DIR}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
+    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
+    puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR}`
   end
   
   def build_native_gems
