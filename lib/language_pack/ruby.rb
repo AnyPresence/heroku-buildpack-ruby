@@ -477,19 +477,20 @@ WARNING
   end
 
   def uses_oci8?
-    log "Checking if #{File.join(Dir.pwd,OCI8_TRIGGER_NAME).inspect} exists"
+    puts "Checking if #{File.join(Dir.pwd,OCI8_TRIGGER_NAME).inspect} exists"
     exists = File.exist?(File.join(Dir.pwd,OCI8_TRIGGER_NAME))
-    log "Exists is #{exists.inspect}"
+    puts "Exists is #{exists.inspect}"
     exists
   end
     
   def install_oci8_binaries
-    log `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
-    log `ls -alh #{ORACLE_INSTANT_CLIENT_DIR}`
+    Dir.mkdir(ORACLE_INSTANT_CLIENT_DIR) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
+    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - 2&>1`
+    puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR}`
   end
   
   def build_native_gems
-    log "Build native gems here\nRuby: #{`which ruby`}\nEnv #{`env`}"
+    puts "Build native gems here\nRuby: #{`which ruby`}\nEnv #{`env`}"
     install_oci8_binaries if uses_oci8?
   end
   
