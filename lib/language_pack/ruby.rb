@@ -486,7 +486,7 @@ WARNING
     if $?.success?
       puts "Done installing OCI8"
       puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR}`
-      ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}"
+      ENV["LD_LIBRARY_PATH"]="#{File.join(Dir.pwd,ORACLE_INSTANT_CLIENT_DIR)}"
     else
       raise "Failed to install OCI8 binaries"
     end
