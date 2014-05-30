@@ -485,6 +485,7 @@ WARNING
     result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
     if $?.success?
       puts "Done installing OCI8"
+      ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}"
     else
       raise "Failed to install OCI8 binaries"
     end
@@ -551,7 +552,7 @@ WARNING
             "NOKOGIRI_USE_SYSTEM_LIBRARIES" => "true"
           }
           env_vars["BUNDLER_LIB_PATH"] = "#{bundler_path}" if ruby_version.ruby_version == "1.8.7"
-          env_vars["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}" if uses_oci8?
+          
           puts "Running: #{bundle_command}"
           instrument "ruby.bundle_install" do
             bundle_time = Benchmark.realtime do
