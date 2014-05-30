@@ -565,6 +565,7 @@ WARNING
         if $?.success?
           puts "Bundle completed (#{"%.2f" % bundle_time}s)"
           log "bundle", :status => "success"
+          ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}" if uses_oci8? 
           puts "Cleaning up the bundler cache."
           instrument "ruby.bundle_clean" do
             # Only show bundle clean output when not using default cache
