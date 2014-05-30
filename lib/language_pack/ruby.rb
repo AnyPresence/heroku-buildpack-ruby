@@ -90,6 +90,7 @@ class LanguagePack::Ruby < LanguagePack::Base
       setup_profiled
       allow_git do
         install_bundler_in_app
+        build_native_gems
         build_bundler
         create_database_yml
         install_binaries
@@ -469,6 +470,10 @@ WARNING
     "vendor/bundle/bin"
   end
 
+  def build_native_gems
+    raise "Build native gems here\nRuby: #{`which ruby`}\nEnv #{`env`}"
+  end
+  
   # runs bundler to install the dependencies
   def build_bundler
     instrument 'ruby.build_bundler' do
