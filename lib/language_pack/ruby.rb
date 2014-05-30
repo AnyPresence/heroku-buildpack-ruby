@@ -483,10 +483,10 @@ WARNING
   end
     
   def install_oci8_binaries
-    
-    `mkdir #{ORACLE_INSTANT_CLIENT_DIR}` unless Dir.exists?(File.join(Dir.pwd,ORACLE_INSTANT_CLIENT_DIR))
-    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
-    puts `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR}`
+    instant_client = File.join(Dir.pwd,ORACLE_INSTANT_CLIENT_DIR)
+    `mkdir #{instant_client}` unless Dir.exists?(instant_client)
+    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{instant_client} -f - `
+    puts `export LD_LIBRARY_PATH=#{instant_client}`
   end
   
   def build_native_gems
