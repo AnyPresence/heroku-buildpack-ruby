@@ -485,8 +485,8 @@ WARNING
     result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
     if $?.success?
       puts "Done installing OCI8"
-      puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR}`
       ENV["LD_LIBRARY_PATH"]="/app/#{ORACLE_INSTANT_CLIENT_DIR}"
+      puts `ls -alh #{ENV["LD_LIBRARY_PATH"]}`
     else
       raise "Failed to install OCI8 binaries"
     end
