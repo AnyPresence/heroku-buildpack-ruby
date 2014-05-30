@@ -486,7 +486,7 @@ WARNING
     if $?.success?
       puts "Done installing OCI8"
       puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR}`
-      ENV["LD_LIBRARY_PATH"]="#{File.join(Dir.pwd,ORACLE_INSTANT_CLIENT_DIR)}"
+      ENV["LD_LIBRARY_PATH"]="/app/#{ORACLE_INSTANT_CLIENT_DIR}"
     else
       raise "Failed to install OCI8 binaries"
     end
@@ -565,7 +565,6 @@ WARNING
         if $?.success?
           puts "Bundle completed (#{"%.2f" % bundle_time}s)"
           log "bundle", :status => "success"
-          ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}" if uses_oci8? 
           puts "Cleaning up the bundler cache."
           instrument "ruby.bundle_clean" do
             # Only show bundle clean output when not using default cache
