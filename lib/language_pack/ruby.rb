@@ -477,20 +477,25 @@ WARNING
   end
 
   def uses_oci8?
-    found = File.exist?(File.join(Dir.pwd,OCI8_TRIGGER_NAME))
-    puts "Found #{OCI8_TRIGGER_NAME} trigger" if found
-    found
+    File.exist?(File.join(Dir.pwd,OCI8_TRIGGER_NAME))
   end
     
   def install_oci8_binaries
     `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
     result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
-    puts `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR}`
+    if $?.success?
+      puts "Done installing OCI8"
+    else
+      raise "Failed to install OCI8 binaries"
+    end
   end
   
   def build_native_gems
     puts "Building native gems..."
-    install_oci8_binaries if uses_oci8?
+    if uses_oci8?
+      puts "Found OCI8 trigger"
+      install_oci8_binaries 
+    end
     puts "AFTER\nRuby: #{`which ruby`}\nEnv #{`env`}"
   end
   
@@ -546,6 +551,7 @@ WARNING
             "NOKOGIRI_USE_SYSTEM_LIBRARIES" => "true"
           }
           env_vars["BUNDLER_LIB_PATH"] = "#{bundler_path}" if ruby_version.ruby_version == "1.8.7"
+          env_vars["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}" if uses_oci8?
           puts "Running: #{bundle_command}"
           instrument "ruby.bundle_install" do
             bundle_time = Benchmark.realtime do
