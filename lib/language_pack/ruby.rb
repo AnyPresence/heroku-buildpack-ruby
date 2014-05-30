@@ -27,7 +27,7 @@ class LanguagePack::Ruby < LanguagePack::Base
 
   OCI8_TRIGGER_NAME = '.oracle.ini'
   ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2.tar.gz"
-  ORACLE_INSTANT_CLIENT_DIR = File.join(ENV['HOME'],"instant_client_11_2")
+  ORACLE_INSTANT_CLIENT_DIR = "ENV['HOME']/vendor/instant_client_11_2"
   
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
