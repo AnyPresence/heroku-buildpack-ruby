@@ -22,7 +22,13 @@ class LanguagePack::Ruby < LanguagePack::Base
   DEFAULT_RUBY_VERSION = "ruby-2.0.0"
   RBX_BASE_URL         = "http://binaries.rubini.us/heroku"
   NODE_BP_PATH         = "vendor/node/bin"
+  
+  CHAMELEON_S3_BUCKET = 'https://s3.amazonaws.com/chameleon-heroku-assets'
 
+  OCI8_TRIGGER_NAME = '.oracle.ini'
+  ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2_with_libaio_oci8.tar.gz"
+  ORACLE_INSTANT_CLIENT_DIR = 'instant_client_11_2'
+  
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
   def self.use?
@@ -470,8 +476,21 @@ WARNING
     "vendor/bundle/bin"
   end
 
+  def uses_oci8?
+    log "Checking if #{File.join(Dir.pwd,OCI8_TRIGGER_NAME).inspect} exists"
+    exists = File.exist?(File.join(Dir.pwd,OCI8_TRIGGER_NAME))
+    log "Exists is #{exists.inspect}"
+    exists
+  end
+    
+  def install_oci8_binaries
+    log `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
+    log `ls -alh #{ORACLE_INSTANT_CLIENT_DIR}`
+  end
+  
   def build_native_gems
-    raise "Build native gems here\nRuby: #{`which ruby`}\nEnv #{`env`}"
+    log "Build native gems here\nRuby: #{`which ruby`}\nEnv #{`env`}"
+    install_oci8_binaries if uses_oci8?
   end
   
   # runs bundler to install the dependencies
