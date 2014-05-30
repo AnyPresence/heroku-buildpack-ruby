@@ -27,7 +27,7 @@ class LanguagePack::Ruby < LanguagePack::Base
 
   OCI8_TRIGGER_NAME = '.oracle.ini'
   ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2.tar.gz"
-  ORACLE_INSTANT_CLIENT_DIR = 'vendor/instant_client_11_2'
+  ORACLE_INSTANT_CLIENT_DIR = Dir.join(ENV['HOME'],"instant_client_11_2")
   
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
@@ -485,7 +485,7 @@ WARNING
     result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
     if $?.success?
       puts "Done installing OCI8"
-      ENV["LD_LIBRARY_PATH"]="/app/#{ORACLE_INSTANT_CLIENT_DIR}"
+      ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}:$LD_LIBRARY_PATH"
       puts `ls -alh #{ENV["LD_LIBRARY_PATH"]}`
     else
       raise "Failed to install OCI8 binaries"
