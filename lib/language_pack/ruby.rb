@@ -507,6 +507,22 @@ WARNING
     end
   end
   
+  def install_freetds_binaries
+    
+    `mkdir -p #{FREETDS_DIR_FOR_RELEASE}` unless Dir.exists?(FREETDS_DIR_FOR_RELEASE)
+    `mkdir -p #{FREETDS_DIR_ABSOLUTE_PATH}` unless Dir.exists?(FREETDS_DIR_ABSOLUTE_PATH)
+    
+    result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR_ABSOLUTE_PATH} -f - `
+    if $?.success?
+      puts "Setting FreeTDS environment variables"
+#      ENV["LD_LIBRARY_PATH"] = "#{FREETDS_DIR_ABSOLUTE_PATH}/lib:#{ENV['LD_LIBRARY_PATH']}" 
+      ENV["FREETDS_DIR"] = "#{FREETDS_DIR_ABSOLUTE_PATH}"  # Required for tiny_tds gem
+      puts "Done installing FreeTDS"
+    else
+      raise "Failed to install FreeTDS binaries"
+    end
+  end
+  
   def uses_freetds?
     File.exist?(File.join(Dir.pwd,FREETDS_TRIGGER_NAME))
   end
