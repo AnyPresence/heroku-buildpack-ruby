@@ -28,7 +28,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   OCI8_TRIGGER_NAME = '.oracle.ini'
   ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2_with_libaio_oci8.tar.gz"
   ORACLE_INSTANT_CLIENT_DIR = "vendor/instant_client_11_2"
-  ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH = "#{Dir.pwd}/#{ORACLE_INSTANT_CLIENT_DIR}"
+  ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH = "#{ENV['HOME']}/#{ORACLE_INSTANT_CLIENT_DIR}"
   
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
@@ -482,8 +482,8 @@ WARNING
   end
     
   def install_oci8_binaries
-    `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
-    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
+    `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH)
+    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} -f - `
     if $?.success?
       puts "Setting OCI8 environment variables"
       ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}:$LD_LIBRARY_PATH"
