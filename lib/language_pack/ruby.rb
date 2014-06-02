@@ -68,7 +68,7 @@ class LanguagePack::Ruby < LanguagePack::Base
         "LANG"     => "en_US.UTF-8",
       }
 
-      vars.merge({ 
+      vars.merge!({ 
         "LD_LIBRARY_PATH" => "#{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}:$LD_LIBRARY_PATH",
         "NLS_LANG" => 'AMERICAN_AMERICA.UTF8'
       }) if uses_oci8?
