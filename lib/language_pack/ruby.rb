@@ -555,7 +555,7 @@ WARNING
     result = `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_ABSOLUTE_PATH} -f - `
     if $?.success?
       puts "Setting SAP HANA environment variables"
-      ENV["LD_LIBRARY_PATH"]="#{UNIX_ODBC_DIR_ABSOLUTE_PATH}:#{ENV['LD_LIBRARY_PATH']}" # Required for ruby odbc gem
+      ENV["LD_LIBRARY_PATH"]="#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib:#{ENV['LD_LIBRARY_PATH']}" # Required for ruby odbc gem
       puts "Done installing SAP HANA binaries"
     else
       raise "Failed to install SAP HANA binaries"
