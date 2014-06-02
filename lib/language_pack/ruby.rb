@@ -72,12 +72,24 @@ class LanguagePack::Ruby < LanguagePack::Base
       vars = {
         "LANG"     => "en_US.UTF-8",
       }
-
-      vars.merge!({ 
-        "LD_LIBRARY_PATH" => "#{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}:$LD_LIBRARY_PATH",
-        "NLS_LANG" => 'AMERICAN_AMERICA.UTF8'
-      }) if uses_oci8?
+      extra_vars = {}
       
+      ld_library_vars = []
+      
+      if uses_oci8?
+        ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE
+        extra_vars["NLS_LANG"] = 'AMERICAN_AMERICA.UTF8'
+      end
+      
+      if uses_freetds?
+        ld_library_vars << "#{FREETDS_DIR_ABSOLUTE_PATH}/lib" 
+        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
+      end
+      
+      extra_vars.merge!(ld_library_vars.join(":")) unless ld_library_vars.empty?
+      
+      vars.merge!(extra_vars) unless extra_vars.empty?
+        
       ruby_version.jruby? ? vars.merge({
         "JAVA_OPTS" => default_java_opts,
         "JRUBY_OPTS" => default_jruby_opts,
@@ -501,7 +513,7 @@ WARNING
       puts "Setting OCI8 environment variables"
       ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}:#{ENV['LD_LIBRARY_PATH']}" # Required for oci8 gem
       ENV["NLS_LANG"]='AMERICAN_AMERICA.UTF8'
-      puts "Done installing OCI8"
+      puts "Done installing OCI8 binaries"
     else
       raise "Failed to install OCI8 binaries"
     end
@@ -515,9 +527,8 @@ WARNING
     result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR_ABSOLUTE_PATH} -f - `
     if $?.success?
       puts "Setting FreeTDS environment variables"
-#      ENV["LD_LIBRARY_PATH"] = "#{FREETDS_DIR_ABSOLUTE_PATH}/lib:#{ENV['LD_LIBRARY_PATH']}" 
       ENV["FREETDS_DIR"] = "#{FREETDS_DIR_ABSOLUTE_PATH}"  # Required for tiny_tds gem
-      puts "Done installing FreeTDS"
+      puts "Done installing FreeTDS binaries"
     else
       raise "Failed to install FreeTDS binaries"
     end
