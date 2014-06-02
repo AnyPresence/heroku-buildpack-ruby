@@ -86,7 +86,7 @@ class LanguagePack::Ruby < LanguagePack::Base
         extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       end
       
-      extra_vars.merge!(ld_library_vars.join(":")) unless ld_library_vars.empty?
+      extra_vars.merge!("LD_LIBRARY_PATH" => ld_library_vars.join(":")) unless ld_library_vars.empty?
       
       vars.merge!(extra_vars) unless extra_vars.empty?
         
