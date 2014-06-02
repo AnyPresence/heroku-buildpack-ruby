@@ -486,7 +486,7 @@ WARNING
     result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
     if $?.success?
       puts "Setting OCI8 environment variables"
-      ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}:$LD_LIBRARY_PATH"
+      ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}:$LD_LIBRARY_PATH"
       ENV["NLS_LANG"]='AMERICAN_AMERICA.UTF8'
       puts "Done installing OCI8"
     else
