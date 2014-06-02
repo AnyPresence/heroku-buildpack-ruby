@@ -82,7 +82,7 @@ class LanguagePack::Ruby < LanguagePack::Base
       end
       
       if uses_freetds?
-        ld_library_vars << "#{FREETDS_DIR_ABSOLUTE_PATH}/lib" 
+        ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}/lib" 
         extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       end
       
