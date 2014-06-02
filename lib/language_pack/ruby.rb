@@ -91,6 +91,10 @@ class LanguagePack::Ruby < LanguagePack::Base
         extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       end
       
+      if uses_sap_hana?
+        ld_library_vars << "#{UNIX_ODBC_DIR_FOR_RELEASE}"
+        ld_library_vars << "#{UNIX_ODBC_DIR_FOR_RELEASE}/lib"
+      end
       extra_vars.merge!("LD_LIBRARY_PATH" => ld_library_vars.join(":")) unless ld_library_vars.empty?
       
       vars.merge!(extra_vars) unless extra_vars.empty?
@@ -555,7 +559,7 @@ WARNING
     result = `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_ABSOLUTE_PATH} -f - `
     if $?.success?
       puts "Setting SAP HANA environment variables"
-      ENV["LD_LIBRARY_PATH"]="#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib:#{ENV['LD_LIBRARY_PATH']}" # Required for ruby odbc gem
+      ENV["LD_LIBRARY_PATH"]="#{UNIX_ODBC_DIR_ABSOLUTE_PATH}:#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib:#{ENV['LD_LIBRARY_PATH']}" # Required for ruby odbc gem
       puts "Done installing SAP HANA binaries"
     else
       raise "Failed to install SAP HANA binaries"
