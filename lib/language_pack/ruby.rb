@@ -535,7 +535,7 @@ WARNING
     end
     if uses_freetds?
       puts "Found FreeTDS trigger"
-      raise "Implement me"
+      install_freetds_binaries
     end
     puts "Done building native gems."
   end
