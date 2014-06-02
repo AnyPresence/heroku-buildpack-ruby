@@ -27,8 +27,8 @@ class LanguagePack::Ruby < LanguagePack::Base
 
   OCI8_TRIGGER_NAME = '.oracle.ini'
   ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2_with_libaio_oci8.tar.gz"
-  ORACLE_INSTANT_CLIENT_DIR = "#{ARGV[0]}/vendor/instant_client_11_2"
-  ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH = "#{ENV['HOME']}/vendor/instant_client_11_2"
+  ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH = "#{ARGV[0]}/vendor/instant_client_11_2"
+  ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE = "#{ENV['HOME']}/vendor/instant_client_11_2"
   
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
@@ -69,7 +69,7 @@ class LanguagePack::Ruby < LanguagePack::Base
       }
 
       vars.merge({ 
-        "LD_LIBRARY_PATH" => "#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}:$LD_LIBRARY_PATH",
+        "LD_LIBRARY_PATH" => "#{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}:$LD_LIBRARY_PATH",
         "NLS_LANG" => 'AMERICAN_AMERICA.UTF8'
       }) if uses_oci8?
       
@@ -488,13 +488,13 @@ WARNING
     
   def install_oci8_binaries
     
-    `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
-    raise "Dead code" unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH)
+    `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH)
+    `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE)
     
-    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
+    result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} -f - `
     if $?.success?
       puts "Setting OCI8 environment variables"
-      ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR}:#{ENV['LD_LIBRARY_PATH']}"
+      ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}:#{ENV['LD_LIBRARY_PATH']}" # Required for oci8 gem
       ENV["NLS_LANG"]='AMERICAN_AMERICA.UTF8'
       puts "Done installing OCI8"
     else
