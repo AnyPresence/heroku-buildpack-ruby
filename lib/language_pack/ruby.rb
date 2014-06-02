@@ -591,6 +591,11 @@ WARNING
   def build_bundler
     instrument 'ruby.build_bundler' do
       log("bundle") do
+        
+        # Tell bundler to include this option for ruby-odbc gem
+        config_result = `#{bundle_bin} config build.rubyodbc --with-odbc-dir=#{UNIX_ODBC_DIR_FOR_RELEASE} 2&>1 ` if uses_sap_hana?
+        puts "Config result is #{config_result}"
+        
         bundle_without = env("BUNDLE_WITHOUT") || "development:test"
         bundle_bin     = "bundle"
         bundle_command = "#{bundle_bin} install --without #{bundle_without} --path vendor/bundle --binstubs #{bundler_binstubs_path}"
