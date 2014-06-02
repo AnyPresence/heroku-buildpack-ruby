@@ -29,7 +29,12 @@ class LanguagePack::Ruby < LanguagePack::Base
   ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2_with_libaio_oci8.tar.gz"
   ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH = "#{ARGV[0]}/vendor/instant_client_11_2"
   ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE = "#{ENV['HOME']}/vendor/instant_client_11_2"
-  
+
+  FREETDS_TRIGGER_NAME = '.freetds.conf'
+  FREETDS_TGZ_URL="#{CHAMELEON_S3_BUCKET}/freetds.tar.gz"
+  FREETDS_DIR_ABSOLUTE_PATH = "#{ARGV[0]}/vendor/freetds"
+  FREETDS_DIR_FOR_RELEASE = "#{ENV['HOME']}/vendor/freetds"
+    
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
   def self.use?
@@ -502,11 +507,19 @@ WARNING
     end
   end
   
+  def uses_freetds?
+    File.exist?(File.join(Dir.pwd,FREETDS_TRIGGER_NAME))
+  end
+  
   def build_native_gems
     puts "Building native gems..."
     if uses_oci8?
       puts "Found OCI8 trigger"
       install_oci8_binaries 
+    end
+    if uses_freetds?
+      puts "Found FreeTDS trigger"
+      raise "Implement me"
     end
     puts "Done building native gems."
   end
