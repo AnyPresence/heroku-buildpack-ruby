@@ -35,7 +35,6 @@ require "language_pack/helpers/stale_file_cleaner"
 require "language_pack/helpers/rake_runner"
 require "language_pack/helpers/bundler_wrapper"
 
-require "language_pack/anypresence"
 require "language_pack/ruby"
 require "language_pack/rack"
 require "language_pack/rails2"

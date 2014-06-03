@@ -6,6 +6,7 @@ require "language_pack"
 require "language_pack/base"
 require "language_pack/ruby_version"
 require "language_pack/version"
+require "language_pack/anypresence"
 
 # base Ruby Language Pack. This is for any base ruby app.
 class LanguagePack::Ruby < LanguagePack::Base
