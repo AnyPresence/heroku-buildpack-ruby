@@ -569,7 +569,7 @@ WARNING
 CONFIG
       dot_bundle = File.join(Dir.pwd,'.bundle')
       Dir.mkdir(dot_bundle)
-      File.open(File.join(dot_bundle,'config')), 'w') {|f| f.write(RUBY_ODBC_BUNDLER_CONFIG) }
+      File.open(File.join(dot_bundle,'config'), 'w') {|f| f.write(RUBY_ODBC_BUNDLER_CONFIG) }
       puts "Done installing SAP HANA binaries"
     else
       raise "Failed to install SAP HANA binaries"
