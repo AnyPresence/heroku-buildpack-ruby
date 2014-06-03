@@ -558,8 +558,18 @@ WARNING
     
     result = `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_ABSOLUTE_PATH} -f - `
     if $?.success?
-      puts "Setting SAP HANA environment variables"
-      ENV["LD_LIBRARY_PATH"]="#{UNIX_ODBC_DIR_ABSOLUTE_PATH}:#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib:#{ENV['LD_LIBRARY_PATH']}" # Required for ruby odbc gem
+      puts "Creating Bundler configuration file for SAP HANA"
+#      ENV["LD_LIBRARY_PATH"]="#{UNIX_ODBC_DIR_ABSOLUTE_PATH}:#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib:#{ENV['LD_LIBRARY_PATH']}" # Required for ruby odbc gem
+      RUBY_ODBC_BUNDLER_CONFIG = <<-CONFIG
+      ---
+      BUNDLE_BUILD__RUBY-ODBC: --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib
+      BUNDLE_PATH: vendor
+      BUNDLE_DISABLE_SHARED_GEMS: '1'
+      BUNDLE_CACHE_ALL: true
+CONFIG
+      dot_bundle = File.join(Dir.pwd,'.bundle')
+      Dir.mkdir(dot_bundle)
+      File.open(File.join(dot_bundle,'config')), 'w') {|f| f.write(RUBY_ODBC_BUNDLER_CONFIG) }
       puts "Done installing SAP HANA binaries"
     else
       raise "Failed to install SAP HANA binaries"
