@@ -561,11 +561,12 @@ WARNING
       puts "Creating Bundler configuration file for SAP HANA"
 #      ENV["LD_LIBRARY_PATH"]="#{UNIX_ODBC_DIR_ABSOLUTE_PATH}:#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib:#{ENV['LD_LIBRARY_PATH']}" # Required for ruby odbc gem
       ruby_odbc_bundle_config = <<-CONFIG
-      ---
-      BUNDLE_BUILD__RUBY-ODBC: --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib
-      BUNDLE_PATH: vendor
-      BUNDLE_DISABLE_SHARED_GEMS: '1'
-      BUNDLE_CACHE_ALL: true
+---
+BUNDLE_BUILD__RUBY-ODBC: --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib
+BUNDLE_PATH: vendor
+BUNDLE_DISABLE_SHARED_GEMS: '1'
+BUNDLE_CACHE_ALL: true
+
 CONFIG
       dot_bundle = File.join(Dir.pwd,'.bundle')
       Dir.mkdir(dot_bundle)
@@ -601,10 +602,6 @@ CONFIG
   def build_bundler
     instrument 'ruby.build_bundler' do
       log("bundle") do
-        
-        # Tell bundler to include this option for ruby-odbc gem
-        config_result = `bundle config build.rubyodbc --with-odbc-dir=#{UNIX_ODBC_DIR_FOR_RELEASE} 2&>1 ` if uses_sap_hana?
-        puts "Config result is #{config_result}"
         
         bundle_without = env("BUNDLE_WITHOUT") || "development:test"
         bundle_bin     = "bundle"
