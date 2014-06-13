@@ -38,6 +38,8 @@ module LanguagePack
       
       extra_vars.merge!("LD_LIBRARY_PATH" => ld_library_vars.join(":")) unless ld_library_vars.empty?
       
+      puts "Merging variables of #{extra_vars.inspect}" unless extra_vars.empty?
+      
       vars.merge!(extra_vars) unless extra_vars.empty?
     end
     
