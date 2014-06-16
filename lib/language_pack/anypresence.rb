@@ -162,7 +162,7 @@ CONFIG
         puts "Found SAP HANA trigger"
         install_sap_hana_binaries
       end
-
+      puts "\nDot bundle file is\n#{File.read(dot_bundle_config_file)}"
       puts "Done building native gems."
     end
     
