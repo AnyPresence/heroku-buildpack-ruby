@@ -92,7 +92,7 @@ module LanguagePack
         puts "Creating Bundler configuration file for SAP HANA"
         ruby_odbc_bundle_config = <<-CONFIG
 ---
-BUNDLE_BUILD__RUBY-ODBC: --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib
+BUNDLE_BUILD__RUBY-ODBC: --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib
 BUNDLE_PATH: vendor
 BUNDLE_DISABLE_SHARED_GEMS: '1'
 BUNDLE_CACHE_ALL: true
