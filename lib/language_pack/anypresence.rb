@@ -132,16 +132,12 @@ CONFIG
     end
     
     def dot_bundle 
-      dot_bundle_dir = File.join(Dir.pwd,'.bundle')
-      Dir.mkdir(dot_bundle_dir) unless Dir.exists?(dot_bundle_dir)
-      dot_bundle_dir
+      File.join(Dir.pwd,'.bundle')
     end
     
     def build_native_gems
       puts "Building native gems..."
-      
-      
-      Dir.mkdir(dot_bundle)
+      Dir.mkdir(dot_bundle) unless File.exists?(dot_bundle)
       
       if uses_oci8?
         puts "Found OCI8 trigger"
