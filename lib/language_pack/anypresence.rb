@@ -122,7 +122,7 @@ CONFIG
         File.open(dot_bundle_config_file, 'a') {|f| f.write(gem_configuration_to_append) } unless existing_config.include?(key_to_check_for)
       else
         File.open(dot_bundle_config_file, 'w') do |f|
-          f.write("---")
+          f.write("---\n")
           f.write(gem_configuration_to_append) 
         end
       end
