@@ -60,11 +60,16 @@ module LanguagePack
 
       result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} -f - `
       if $?.success?
-        puts "Setting OCI8 environment variables"
-        `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}:$LD_LIBRARY_PATH `
-        ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}:#{ENV['LD_LIBRARY_PATH']}" # Required for oci8 gem
-        ENV["NLS_LANG"]='AMERICAN_AMERICA.UTF8'
-        puts "Done installing OCI8 binaries"
+        
+        puts "Creating Bundler configuration file for OCI8"
+        ruby_oci8_bundle_config = <<-CONFIG
+#{ruby_oci8_gem_bundle_key}: --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}
+BUNDLE_PATH: vendor
+BUNDLE_DISABLE_SHARED_GEMS: '1'
+BUNDLE_CACHE_ALL: true
+CONFIG
+    
+        append_config_to_dot_bundle_config_file(ruby_oci8_gem_bundle_key, ruby_oci8_bundle_config)
       else
         raise "Failed to install OCI8 binaries"
       end
@@ -125,6 +130,10 @@ CONFIG
     
     def ruby_odbc_gem_bundle_key
       'BUNDLE_BUILD__RUBY-ODBC'
+    end
+    
+    def ruby_oci8_gem_bundle_key
+      'BUNDLE_BUILD__RUBY-OCI8'
     end
     
     def dot_bundle_config_file
