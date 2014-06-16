@@ -99,24 +99,50 @@ module LanguagePack
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
         ruby_odbc_bundle_config = <<-CONFIG
----
-BUNDLE_BUILD__RUBY-ODBC: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib
+#{ruby_odbc_gem_bundle_key}: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib
 BUNDLE_PATH: vendor
 BUNDLE_DISABLE_SHARED_GEMS: '1'
 BUNDLE_CACHE_ALL: true
-
 CONFIG
-        dot_bundle = File.join(Dir.pwd,'.bundle')
-        Dir.mkdir(dot_bundle)
-        File.open(File.join(dot_bundle,'config'), 'w') {|f| f.write(ruby_odbc_bundle_config) }
+    
+        append_config_to_dot_bundle_config_file(ruby_odbc_gem_bundle_key, ruby_odbc_bundle_config)
       else
         raise "Failed to install SAP HANA binaries"
       end
     end
 
+    def append_config_to_dot_bundle_config_file(key_to_check_for, gem_configuration_to_append)
+      if File.exists?(dot_bundle_config_file) && File.file?(dot_bundle_config_file)
+        existing_config = File.read(dot_bundle_config_file)
+        File.open(dot_bundle_config_file, 'a') {|f| f.write(gem_configuration_to_append) } unless existing_config.include?(key_to_check_for)
+      else
+        File.open(dot_bundle_config_file, 'w') do |f|
+          f.write("---")
+          f.write(gem_configuration_to_append) 
+        end
+      end
+    end
+    
+    def ruby_odbc_gem_bundle_key
+      'BUNDLE_BUILD__RUBY-ODBC'
+    end
+    
+    def dot_bundle_config_file
+      File.join(dot_bundle,'config')
+    end
+    
+    def dot_bundle 
+      dot_bundle_dir = File.join(Dir.pwd,'.bundle')
+      Dir.mkdir(dot_bundle_dir) unless Dir.exists?(dot_bundle_dir)
+      dot_bundle_dir
+    end
+    
     def build_native_gems
       puts "Building native gems..."
-
+      
+      
+      Dir.mkdir(dot_bundle)
+      
       if uses_oci8?
         puts "Found OCI8 trigger"
         install_oci8_binaries 
