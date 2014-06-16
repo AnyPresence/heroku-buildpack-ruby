@@ -25,6 +25,7 @@ module LanguagePack
         ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE
         extra_vars["NLS_LANG"] = 'AMERICAN_AMERICA.UTF8'
         `export NLS_LANG='AMERICAN_AMERICA.UTF8'`
+        ENV['NLS_LANG'] = 'AMERICAN_AMERICA.UTF8'
       end
       
       if uses_freetds?
@@ -38,8 +39,11 @@ module LanguagePack
         ld_library_vars << "#{UNIX_ODBC_DIR_FOR_RELEASE}/lib"
       end
       
-      extra_vars.merge!("LD_LIBRARY_PATH" => ld_library_vars.join(":")) unless ld_library_vars.empty?
-      `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{ld_library_vars.join(":")}` unless ld_library_vars.empty?
+      unless ld_library_vars.empty?
+        new_ld_library_path = ld_library_vars.join(":")
+        extra_vars.merge!("LD_LIBRARY_PATH" => new_ld_library_path) 
+        `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{new_ld_library_path}`
+      end
       
       puts "Merging variables of #{extra_vars.inspect}" unless extra_vars.empty?
       
@@ -57,6 +61,7 @@ module LanguagePack
       result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} -f - `
       if $?.success?
         puts "Setting OCI8 environment variables"
+        `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}:$LD_LIBRARY_PATH `
         ENV["LD_LIBRARY_PATH"]="#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}:#{ENV['LD_LIBRARY_PATH']}" # Required for oci8 gem
         ENV["NLS_LANG"]='AMERICAN_AMERICA.UTF8'
         puts "Done installing OCI8 binaries"
