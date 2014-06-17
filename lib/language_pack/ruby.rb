@@ -93,7 +93,6 @@ class LanguagePack::Ruby < LanguagePack::Base
       setup_profiled
       allow_git do
         install_bundler_in_app
-        build_native_gems
         build_bundler
         create_database_yml
         install_binaries
@@ -392,6 +391,7 @@ WARNING
       Dir.chdir(slug_vendor_base) do |dir|
         `cp -R #{bundler.bundler_path}/. .`
       end
+      build_native_gems
     end
   end
 
