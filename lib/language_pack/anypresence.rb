@@ -142,7 +142,7 @@ CONFIG
     
     def build_native_gems
       puts "Building native gems..."
-      Dir.mkdir(dot_bundle) unless File.exists?(dot_bundle)
+      puts "\nBEFORE: Bundle Config is #{`bundle config`}"
       
       if uses_oci8?
         puts "Found OCI8 trigger"
@@ -158,7 +158,7 @@ CONFIG
         puts "Found SAP HANA trigger"
         install_sap_hana_binaries
       end
-      puts "\nDot bundle file is\n#{File.read(dot_bundle_config_file)}"
+      puts "\nAFTER: Bundle Config is #{`bundle config`}"
       puts "Done building native gems."
     end
     
