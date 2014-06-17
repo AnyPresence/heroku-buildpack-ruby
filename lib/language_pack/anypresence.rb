@@ -119,10 +119,12 @@ CONFIG
         File.open(dot_bundle_config_file, 'a') {|f| f.write(gem_configuration_to_append) } unless existing_config.include?(key_to_check_for)
       else
         File.open(dot_bundle_config_file, 'w') do |f|
-          f.write("---\n")
-          f.write("BUNDLE_PATH: vendor")
-          f.write("BUNDLE_DISABLE_SHARED_GEMS: '1'")
-          f.write("BUNDLE_CACHE_ALL: false")
+          f.write <<-CONFIG
+---
+BUNDLE_PATH: vendor
+BUNDLE_DISABLE_SHARED_GEMS: '1'
+BUNDLE_CACHE_ALL: false
+CONFIG
           f.write(gem_configuration_to_append) 
         end
       end
