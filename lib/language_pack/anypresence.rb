@@ -70,6 +70,7 @@ BUNDLE_CACHE_ALL: true
 CONFIG
     
         append_config_to_dot_bundle_config_file(ruby_oci8_gem_bundle_key, ruby_oci8_bundle_config)
+        ENV['LD_LIBRARY_PATH']="#{ENV['LD_LIBRARY_PATH']}:#{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}"
         `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}`
       else
         raise "Failed to install OCI8 binaries"
