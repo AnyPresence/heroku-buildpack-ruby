@@ -58,17 +58,17 @@ module LanguagePack
       `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH)
       `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE)
 
-      result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE} -f - `
+      result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} -f - `
       if $?.success?
         
         puts "Creating Bundler configuration file for OCI8"
         puts "Vendor folder is"
         puts `ls -alh /app/vendor`
-        puts "oracle folder is "
-        puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}`
+        puts "Absolute path has "
+        puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}`
         puts "current dir is #{Dir.pwd}"
-        ENV['LD_LIBRARY_PATH'] = ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE 
-        `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}`
+        ENV['LD_LIBRARY_PATH'] = ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH 
+        `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}`
         #`bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
         #raise "Error configuring OCI8! #{$?}" unless $?.success?
       else
