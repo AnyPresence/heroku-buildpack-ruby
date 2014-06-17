@@ -66,6 +66,7 @@ module LanguagePack
         puts `ls -alh /app/vendor`
         puts "oracle folder is "
         puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}`
+        puts "current dir is #{Dir.pwd}"
         ENV['LD_LIBRARY_PATH'] = ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE 
         `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}`
         #`bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
