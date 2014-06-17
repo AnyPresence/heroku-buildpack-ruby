@@ -135,7 +135,7 @@ CONFIG
     end
     
     def ruby_oci8_gem_bundle_key
-      'BUNDLE_BUILD__RUBY-OCI8'
+      'BUNDLE_BUILD__RUBY-OCI8-2.1.7'
     end
     
     def dot_bundle_config_file
