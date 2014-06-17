@@ -68,6 +68,7 @@ CONFIG
     
         append_config_to_dot_bundle_config_file(ruby_oci8_gem_bundle_key, ruby_oci8_bundle_config)
         puts "Setting LD_LIBRARY_PATH to #{ENV['LD_LIBRARY_PATH']}:#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}"
+        puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}"`
         ENV['LD_LIBRARY_PATH']="#{ENV['LD_LIBRARY_PATH']}:#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}"
         `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}`
       else
