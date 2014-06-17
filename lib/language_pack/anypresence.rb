@@ -65,7 +65,7 @@ module LanguagePack
         puts "oracle path has "        
         puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR} `
         puts "Setting LD_LIBRARY_PATH to #{ORACLE_INSTANT_CLIENT_DIR}"
-        `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR}`
+        ENV['LD_LIBRARY_PATH']=ORACLE_INSTANT_CLIENT_DIR
         #`bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
         #raise "Error configuring OCI8! #{$?}" unless $?.success?
       else
