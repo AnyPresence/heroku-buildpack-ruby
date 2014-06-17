@@ -24,8 +24,6 @@ module LanguagePack
       if uses_oci8?
         ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH
         ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE
-        ENV['LD_LIBRARY_PATH'] = ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH 
-        `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}`
         extra_vars["NLS_LANG"] = 'AMERICAN_AMERICA.UTF8'
         `export NLS_LANG='AMERICAN_AMERICA.UTF8'`
         ENV['NLS_LANG'] = 'AMERICAN_AMERICA.UTF8'
@@ -65,6 +63,8 @@ module LanguagePack
       if $?.success?
         
         puts "Creating Bundler configuration file for OCI8"
+        ENV['LD_LIBRARY_PATH'] = ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH 
+        `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}`
         #`bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
         #raise "Error configuring OCI8! #{$?}" unless $?.success?
       else
