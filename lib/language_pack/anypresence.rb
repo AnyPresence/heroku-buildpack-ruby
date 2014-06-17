@@ -55,17 +55,14 @@ module LanguagePack
     end
 
     def install_oci8_binaries
-      `cd /app/vendor && mkdir instant_client_11_2 `
+      Dir.mkdir(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE)
 
-      result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C /app/vendor/instant_client_11_2 -f - `
+      result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE} -f - `
       if $?.success?
         
-        puts "Setting environment variable for OCI8"
-
-        puts "Setting LD_LIBRARY_PATH to /app/vendor/instant_client_11_2"
-        ENV['LD_LIBRARY_PATH']='/app/vendor/instant_client_11_2'
-        #`bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
-        #raise "Error configuring OCI8! #{$?}" unless $?.success?
+        puts "Creating Bundler configuration file for OCI8"
+        `bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
+        raise "Error configuring OCI8! #{$?}" unless $?.success?
       else
         raise "Failed to install OCI8 binaries"
       end
