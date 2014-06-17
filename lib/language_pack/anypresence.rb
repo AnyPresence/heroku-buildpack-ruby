@@ -62,15 +62,10 @@ module LanguagePack
       if $?.success?
         
         puts "Creating Bundler configuration file for OCI8"
-        ruby_oci8_bundle_config = <<-CONFIG
-#{ruby_oci8_gem_bundle_key}: --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}
-CONFIG
-    
-        append_config_to_dot_bundle_config_file(ruby_oci8_gem_bundle_key, ruby_oci8_bundle_config)
-        puts "Setting LD_LIBRARY_PATH to #{ENV['LD_LIBRARY_PATH']}:#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}"
-        puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}`
-        ENV['LD_LIBRARY_PATH']="#{ENV['LD_LIBRARY_PATH']}:#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}"
-        `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}`
+        
+        `bundle config build.oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
+        raise "Error configuring OCI8! #{$?}" unless $?.success?
+        
       else
         raise "Failed to install OCI8 binaries"
       end
@@ -104,11 +99,9 @@ CONFIG
       result = `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_ABSOLUTE_PATH} -f - `
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
-        ruby_odbc_bundle_config = <<-CONFIG
-#{ruby_odbc_gem_bundle_key}: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib
-CONFIG
-    
-        append_config_to_dot_bundle_config_file(ruby_odbc_gem_bundle_key, ruby_odbc_bundle_config)
+        
+        `bundle config build.odbc --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib 2&>1`
+        raise "Error configuring ODBC! #{$?}" unless $?.success?
       else
         raise "Failed to install SAP HANA binaries"
       end
