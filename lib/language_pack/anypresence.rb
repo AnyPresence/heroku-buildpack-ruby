@@ -62,6 +62,10 @@ module LanguagePack
       if $?.success?
         
         puts "Creating Bundler configuration file for OCI8"
+        puts "Vendor folder is"
+        puts `ls -alh #{ENV['HOME']}/vendor`
+        puts "oracle folder is "
+        puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE]}`
         ENV['LD_LIBRARY_PATH'] = ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE 
         `export LD_LIBRARY_PATH=#{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}`
         #`bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
