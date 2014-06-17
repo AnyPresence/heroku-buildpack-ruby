@@ -64,9 +64,6 @@ module LanguagePack
         puts "Creating Bundler configuration file for OCI8"
         ruby_oci8_bundle_config = <<-CONFIG
 #{ruby_oci8_gem_bundle_key}: --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}
-BUNDLE_PATH: vendor
-BUNDLE_DISABLE_SHARED_GEMS: '1'
-BUNDLE_CACHE_ALL: true
 CONFIG
     
         append_config_to_dot_bundle_config_file(ruby_oci8_gem_bundle_key, ruby_oci8_bundle_config)
@@ -107,9 +104,6 @@ CONFIG
         puts "Creating Bundler configuration file for SAP HANA"
         ruby_odbc_bundle_config = <<-CONFIG
 #{ruby_odbc_gem_bundle_key}: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib
-BUNDLE_PATH: vendor
-BUNDLE_DISABLE_SHARED_GEMS: '1'
-BUNDLE_CACHE_ALL: true
 CONFIG
     
         append_config_to_dot_bundle_config_file(ruby_odbc_gem_bundle_key, ruby_odbc_bundle_config)
@@ -125,6 +119,9 @@ CONFIG
       else
         File.open(dot_bundle_config_file, 'w') do |f|
           f.write("---\n")
+          f.write("BUNDLE_PATH: vendor")
+          f.write("BUNDLE_DISABLE_SHARED_GEMS: '1'")
+          f.write("BUNDLE_CACHE_ALL: false")
           f.write(gem_configuration_to_append) 
         end
       end
