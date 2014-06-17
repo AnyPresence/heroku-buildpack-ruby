@@ -22,7 +22,6 @@ module LanguagePack
       ld_library_vars = []
       
       if uses_oci8?
-        ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH
         ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE
         extra_vars["NLS_LANG"] = 'AMERICAN_AMERICA.UTF8'
         `export NLS_LANG='AMERICAN_AMERICA.UTF8'`
