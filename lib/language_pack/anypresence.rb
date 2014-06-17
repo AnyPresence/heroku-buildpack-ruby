@@ -159,7 +159,7 @@ CONFIG
         puts "Found SAP HANA trigger"
         install_sap_hana_binaries
       end
-      puts "\nAFTER: Bundle Config is #{`bundle config`}"
+      puts "\nAFTER: Bundle Config is #{`more ~/.bundle/config`}"
       puts "Done building native gems."
     end
     
