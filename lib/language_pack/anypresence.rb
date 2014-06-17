@@ -5,17 +5,17 @@ module LanguagePack
     OCI8_TRIGGER_NAME = '.oracle.ini'
     ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2_with_libaio_oci8.tar.gz"
     ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH = "#{ARGV[0]}/vendor/instant_client_11_2"
-    ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE = "#{ENV['HOME']}/vendor/instant_client_11_2"
+    ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE = "/app/vendor/instant_client_11_2"
 
     FREETDS_TRIGGER_NAME = '.freetds.conf'
     FREETDS_TGZ_URL="#{CHAMELEON_S3_BUCKET}/freetds.tar.gz"
     FREETDS_DIR_ABSOLUTE_PATH = "#{ARGV[0]}/vendor/freetds"
-    FREETDS_DIR_FOR_RELEASE = "#{ENV['HOME']}/vendor/freetds"
+    FREETDS_DIR_FOR_RELEASE = "/app/vendor/freetds"
 
     SAP_HANA_TRIGGER = '.odbc.ini'
     UNIX_ODBC_WITH_HANA_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/unixodbc.tar.gz"
     UNIX_ODBC_DIR_ABSOLUTE_PATH = "#{ARGV[0]}/vendor/unixodbc"
-    UNIX_ODBC_DIR_FOR_RELEASE = "#{ENV['HOME']}/vendor/unixodbc"
+    UNIX_ODBC_DIR_FOR_RELEASE = "/app/vendor/unixodbc"
     
     def merge_native_config_vars(vars={})
       extra_vars = {}
@@ -63,7 +63,7 @@ module LanguagePack
         
         puts "Creating Bundler configuration file for OCI8"
         puts "Vendor folder is"
-        puts `ls -alh #{ENV['HOME']}/vendor`
+        puts `ls -alh /app/vendor`
         puts "oracle folder is "
         puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}`
         ENV['LD_LIBRARY_PATH'] = ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE 
