@@ -62,9 +62,10 @@ module LanguagePack
       if $?.success?
         
         puts "Creating Bundler configuration file for OCI8"
-        
         `bundle config build.oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
         raise "Error configuring OCI8! #{$?}" unless $?.success?
+        
+        `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}`
         
       else
         raise "Failed to install OCI8 binaries"
