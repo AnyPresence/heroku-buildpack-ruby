@@ -122,7 +122,7 @@ CONFIG
         File.open(dot_bundle_config_file, 'w') do |f|
           f.write <<-CONFIG
 ---
-BUNDLE_PATH: vendor
+BUNDLE_PATH: vendor/bundle
 BUNDLE_DISABLE_SHARED_GEMS: '1'
 BUNDLE_CACHE_ALL: false
 CONFIG
