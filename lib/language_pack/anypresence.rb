@@ -62,7 +62,7 @@ module LanguagePack
       if $?.success?
         
         puts "Creating Bundler configuration file for OCI8"
-        `bundle config build.oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
+        `bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH} 2&>1`
         raise "Error configuring OCI8! #{$?}" unless $?.success?
         
         `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}`
@@ -101,7 +101,7 @@ module LanguagePack
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
         
-        `bundle config build.odbc --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib 2&>1`
+        `bundle config build.ruby-odbc --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib 2&>1`
         raise "Error configuring ODBC! #{$?}" unless $?.success?
       else
         raise "Failed to install SAP HANA binaries"
