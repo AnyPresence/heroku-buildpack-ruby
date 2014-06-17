@@ -56,12 +56,13 @@ module LanguagePack
 
     def install_oci8_binaries
       `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_ABSOLUTE_PATH)
-      `mkdir -p #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE}` unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE)
+      Dir.mkdir ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE)
 
       result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE} -f - `
       if $?.success?
         
         puts "Creating Bundler configuration file for OCI8"
+        
         puts "Vendor folder is"
         puts `ls -alh /app/vendor`
         puts "Absolute path has "
