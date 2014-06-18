@@ -10,7 +10,7 @@ module LanguagePack
 
     FREETDS_TRIGGER_NAME = '.freetds.conf'
     FREETDS_TGZ_URL="#{CHAMELEON_S3_BUCKET}/freetds.tar.gz"
-    FREETDS_DIR_ABSOLUTE_PATH = "#{ARGV[0]}/vendor/freetds"
+    FREETDS_DIR = "#{ARGV[0]}/vendor/freetds"
     FREETDS_DIR_FOR_RELEASE = "/app/vendor/freetds"
 
     SAP_HANA_TRIGGER = '.odbc.ini'
@@ -31,9 +31,8 @@ module LanguagePack
       end
       
       if uses_freetds?
-        ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}/lib" 
-        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
-        `export FREETDS_DIR=#{FREETDS_DIR_FOR_RELEASE}`
+        ld_library_vars << "#{FREETDS_DIR}/lib" 
+        extra_vars["FREETDS_DIR"] = FREETDS_DIR
       end
       
       if uses_sap_hana?
@@ -68,13 +67,12 @@ module LanguagePack
     end
 
     def install_freetds_binaries
-      `mkdir -p #{FREETDS_DIR_FOR_RELEASE}` unless Dir.exists?(FREETDS_DIR_FOR_RELEASE)
-      `mkdir -p #{FREETDS_DIR_ABSOLUTE_PATH}` unless Dir.exists?(FREETDS_DIR_ABSOLUTE_PATH)
+      FileUtils.mkdir_p(FREETDS_DIR) unless Dir.exists?(FREETDS_DIR)
 
-      result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR_ABSOLUTE_PATH} -f - `
+      result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
         puts "Setting FreeTDS environment variables"
-        ENV["FREETDS_DIR"] = "#{FREETDS_DIR_ABSOLUTE_PATH}"  # Required for tiny_tds gem
+        ENV["FREETDS_DIR"] = "#{FREETDS_DIR}"  # Required for tiny_tds gem
       else
         raise "Failed to install FreeTDS binaries"
       end
