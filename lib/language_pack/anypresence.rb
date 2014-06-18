@@ -74,7 +74,7 @@ module LanguagePack
         puts "Creating Bundler configuration file for FreeTDS"
         puts "Folder has in it"
         puts `ls -alh #{FREETDS_DIR}`
-        `bundle config build.tiny_tds --with-freetds-dir=#{FREETDS_DIR} `
+        `bundle config build.tiny_tds --with-freetds-dir=#{FREETDS_DIR} --with-freetds-include=#{FREETDS_DIR}/include --with-freetds-lib=#{FREETDS_DIR}/lib `
         raise "Error configuring FreeTDS! #{$?}" unless $?.success?
       else
         raise "Failed to install FreeTDS binaries"
