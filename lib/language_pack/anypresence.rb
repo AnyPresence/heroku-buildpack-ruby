@@ -4,8 +4,8 @@ module LanguagePack
 
     OCI8_TRIGGER_NAME = '.oracle.ini'
     ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2_with_libaio_oci8.tar.gz"
-    ORACLE_INSTANT_CLIENT_DIR = "vendor/instant_client_11_2"
-    ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE = "/app/vendor/instant_client_11_2"
+    ORACLE_INSTANT_CLIENT_DIR = "#{ARGV[1]}/vendor/instant_client_11_2"
+    ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE = "./vendor/instant_client_11_2"
 
     FREETDS_TRIGGER_NAME = '.freetds.conf'
     FREETDS_TGZ_URL="#{CHAMELEON_S3_BUCKET}/freetds.tar.gz"
@@ -55,13 +55,13 @@ module LanguagePack
     end
 
     def install_oci8_binaries
-      Dir.mkdir(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE)
+      Dir.mkdir(ORACLE_INSTANT_CLIENT_DIR) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
 
-      result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE} -f - `
+      result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
       if $?.success?
         
         puts "Creating Bundler configuration file for OCI8"
-        `bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE} 2&>1`
+        `bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR} 2&>1`
         raise "Error configuring OCI8! #{$?}" unless $?.success?
       else
         raise "Failed to install OCI8 binaries"
