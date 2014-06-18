@@ -68,7 +68,8 @@ module LanguagePack
     end
 
     def install_freetds_binaries
-      FileUtils.mkdir_p(FREETDS_DIR) unless Dir.exists?(FREETDS_DIR)
+#      FileUtils.mkdir_p(FREETDS_DIR) unless Dir.exists?(FREETDS_DIR)
+      `mkdir -p #{FREETDS_DIR}`
       puts "Downloading FreeTDS package for SQL Server"
       result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
