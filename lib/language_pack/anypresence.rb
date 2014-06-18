@@ -68,14 +68,13 @@ module LanguagePack
     end
 
     def install_freetds_binaries
-#      FileUtils.mkdir_p(FREETDS_DIR) unless Dir.exists?(FREETDS_DIR)
-      `mkdir -p #{FREETDS_DIR}`
+      FileUtils.mkdir_p(FREETDS_DIR) unless Dir.exists?(FREETDS_DIR)
       puts "Downloading FreeTDS package for SQL Server"
       result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
         puts "Setting environment variable for FreeTDS"
         `ls -alh /app/vendor`
-        `export FREETDS_DIR=#{FREETDS_DIR}`
+#        ENV['FREETDS_DIR']=FREETDS_DIR
         #`bundle config build.tiny_tds --with-freetds-include=#{FREETDS_DIR}/include --with-freetds-lib=#{FREETDS_DIR}/lib 2&>1`
         raise "Error configuring FreeTDS! #{$?}" unless $?.success?
       else
