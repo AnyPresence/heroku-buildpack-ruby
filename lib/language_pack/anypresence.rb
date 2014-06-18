@@ -61,9 +61,6 @@ module LanguagePack
 
       result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
       if $?.success?
-        puts "ORACLE_INSTANT_CLIENT_DIR has"
-        puts `ls -alh #{ORACLE_INSTANT_CLIENT_DIR}`
-        
         puts "Creating Bundler configuration file for OCI8"
         `bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR} 2&>1`
         raise "Error configuring OCI8! #{$?}" unless $?.success?
