@@ -5,7 +5,7 @@ module LanguagePack
 
     OCI8_TRIGGER_NAME = '.oracle.ini'
     ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2_with_libaio_oci8.tar.gz"
-    ORACLE_INSTANT_CLIENT_DIR = "#{ARGV[1]}/vendor/instant_client_11_2"
+    ORACLE_INSTANT_CLIENT_DIR = "instant_client_11_2"
 #    ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE = "/app/tmp/cache/vendor/instant_client_11_2"
 
     FREETDS_TRIGGER_NAME = '.freetds.conf'
@@ -56,7 +56,7 @@ module LanguagePack
     end
 
     def install_oci8_binaries
-      FileUtils.mkdir_p(ORACLE_INSTANT_CLIENT_DIR) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
+      FileUtils.mkdir(ORACLE_INSTANT_CLIENT_DIR) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
 
       result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
       if $?.success?
