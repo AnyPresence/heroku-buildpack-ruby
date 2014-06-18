@@ -73,6 +73,7 @@ module LanguagePack
       result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
         puts "Setting environment variable for FreeTDS"
+        `ls -alh /app/vendor`
         `export FREETDS_DIR=#{FREETDS_DIR}`
         #`bundle config build.tiny_tds --with-freetds-include=#{FREETDS_DIR}/include --with-freetds-lib=#{FREETDS_DIR}/lib 2&>1`
         raise "Error configuring FreeTDS! #{$?}" unless $?.success?
