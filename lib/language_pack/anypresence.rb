@@ -23,10 +23,10 @@ module LanguagePack
       ld_library_vars = []
       
       if uses_oci8?
-        ld_library_vars << ORACLE_INSTANT_CLIENT_DIR
-        ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE
+        ld_library_vars << ORACLE_INSTANT_CLIENT_DIR # Needed for the actual build
+        ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE # Needed to load resulting SO
         extra_vars["NLS_LANG"] = 'AMERICAN_AMERICA.UTF8'
-        `export NLS_LANG='AMERICAN_AMERICA.UTF8'`
+        `export NLS_LANG='AMERICAN_AMERICA.UTF8'` # Needed for Rake tasks
         ENV['NLS_LANG'] = 'AMERICAN_AMERICA.UTF8'
       end
       
@@ -58,12 +58,10 @@ module LanguagePack
 
     def install_oci8_binaries
       FileUtils.mkdir_p(ORACLE_INSTANT_CLIENT_DIR) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
-
+      puts "Downloading Oracle client package for OCI8"
       result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
       if $?.success?
-        puts "Creating Bundler configuration file for OCI8"
-        `bundle config build.ruby-oci8 --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR} 2&>1`
-        raise "Error configuring OCI8! #{$?}" unless $?.success?
+        puts "Done"
       else
         raise "Failed to install OCI8 binaries"
       end
