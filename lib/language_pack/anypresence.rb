@@ -33,7 +33,6 @@ module LanguagePack
       if uses_freetds?
         ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}/lib" # Needed to load resulting SO
         ld_library_vars << "#{FREETDS_DIR}/lib" # Needed for build
-        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       end
       
       if uses_sap_hana?
@@ -69,11 +68,14 @@ module LanguagePack
 
     def install_freetds_binaries
       FileUtils.mkdir_p(FREETDS_DIR) unless Dir.exists?(FREETDS_DIR)
-
+      puts "Downloading FreeTDS package for SQL Server"
       result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
-        puts "Setting FreeTDS environment variables"
-        ENV["FREETDS_DIR"] = "#{FREETDS_DIR_FOR_RELEASE}"  # Required for tiny_tds gem
+        puts "Creating Bundler configuration file for FreeTDS"
+        puts "Folder has in it"
+        puts `ls -alh #{FREETDS_DIR}`
+        `bundle config build.tiny_tds --with-freetds-include=#{FREETDS_DIR}/include --with-freetds-lib=#{FREETDS_DIR}/lib 2&>1`
+        raise "Error configuring FreeTDS! #{$?}" unless $?.success?
       else
         raise "Failed to install FreeTDS binaries"
       end
