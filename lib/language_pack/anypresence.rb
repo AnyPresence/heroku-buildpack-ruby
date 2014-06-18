@@ -73,7 +73,7 @@ module LanguagePack
       result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
         puts "Setting FreeTDS environment variables"
-        ENV["FREETDS_DIR"] = "#{FREETDS_DIR}"  # Required for tiny_tds gem
+        ENV["FREETDS_DIR"] = "#{FREETDS_DIR_FOR_RELEASE}"  # Required for tiny_tds gem
       else
         raise "Failed to install FreeTDS binaries"
       end
