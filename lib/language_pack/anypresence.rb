@@ -71,16 +71,19 @@ module LanguagePack
 
     def install_freetds_binaries
       FileUtils.mkdir_p(FREETDS_DIR) unless Dir.exists?(FREETDS_DIR)
+      FileUtils.mkdir_p(FREETDS_DIR_FOR_RELEASE) unless Dir.exists?(FREETDS_DIR_FOR_RELEASE)
       puts "Downloading FreeTDS package for SQL Server"
-      result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
+      `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
+      `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Creating Bundler configuration file for SQL Server"
-#        ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
+        ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
+=begin
         File.open(dot_bundle_config_file, 'a') do |f|
           f.write <<-CONFIG
 BUNDLE_BUILD__TINY_TDS: --with-freetds-dir=#{FREETDS_DIR_FOR_RELEASE}
 CONFIG
-        end
+=end
       else
         raise "Failed to install FreeTDS binaries"
       end
