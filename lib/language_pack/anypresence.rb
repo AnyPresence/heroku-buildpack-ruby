@@ -92,39 +92,21 @@ module LanguagePack
       `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
-        success = append_config_to_dot_bundle_config_file(ruby_odbc_gem_bundle_key, ruby_odbc_gem_bundle_config)
-        raise "Error configuring ODBC!" unless success
-      else
-        raise "Failed to install SAP HANA binaries"
-      end
-    end
-
-    def append_config_to_dot_bundle_config_file(key_to_check_for, gem_configuration_to_append)
-      if File.exists?(dot_bundle_config_file) && File.file?(dot_bundle_config_file)
-        existing_config = File.read(dot_bundle_config_file)
-        File.open(dot_bundle_config_file, 'a') {|f| f.write(gem_configuration_to_append) } unless existing_config.include?(key_to_check_for)
-      else
-        FileUtils.mkdir_p(dot_bundle)
+        FileUtils.mkdir_p(dot_bundle) unless Dir.exists?(dot_bundle)
         File.open(dot_bundle_config_file, 'w') do |f|
           f.write <<-CONFIG
 ---
 BUNDLE_PATH: vendor/bundle
 BUNDLE_DISABLE_SHARED_GEMS: '1'
 BUNDLE_CACHE_ALL: false
+BUNDLE_BUILD__RUBY-ODBC: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib
 CONFIG
-          f.write(gem_configuration_to_append) 
         end
+      else
+        raise "Failed to install SAP HANA binaries"
       end
     end
-    
-    def ruby_odbc_gem_bundle_config
-      "#{ruby_odbc_gem_bundle_key}: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib"
-    end
-    
-    def ruby_odbc_gem_bundle_key
-      'BUNDLE_BUILD__RUBY-ODBC'
-    end
-    
+        
     def dot_bundle_config_file
       File.join(dot_bundle,'config')
     end
@@ -151,7 +133,7 @@ CONFIG
         puts "Found SAP HANA trigger"
         install_sap_hana_binaries
       end
-      puts "\nAFTER: Bundle Config is #{`more ~/.bundle/config`}"
+      puts "\nAFTER: Bundle Config is #{File.read(dot_bundle_config_file)}"
       puts "Done building native gems."
     end
     
