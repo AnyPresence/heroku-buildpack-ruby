@@ -35,7 +35,7 @@ module LanguagePack
         ld_library_vars << "#{FREETDS_DIR}"
         ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}/lib"
         ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}"
-#        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
+        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       end
       
       if uses_sap_hana?
