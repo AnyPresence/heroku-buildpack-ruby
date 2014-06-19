@@ -33,7 +33,7 @@ module LanguagePack
       if uses_freetds?
         ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}/lib" # Needed to load resulting SO
         ld_library_vars << "#{FREETDS_DIR}/lib" # Needed for build
-        extra_vars["FREETDS_DIR"] = FREETDS_DIR
+        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       end
       
       if uses_sap_hana?
@@ -73,7 +73,7 @@ module LanguagePack
       result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
         puts "Setting environment variable for FreeTDS #{FREETDS_DIR}"
-        ENV["FREETDS_DIR"] = FREETDS_DIR
+        ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       else
         raise "Failed to install FreeTDS binaries"
       end
@@ -118,7 +118,7 @@ CONFIG
     
     def build_native_gems
       puts "Building native gems..."
-      puts "\nBEFORE: Bundle Config is #{`bundle config`}"
+      puts "\nBEFORE: FREETDS_DIR is #{ENV['FREETDS_DIR']}"
       
       if uses_oci8?
         puts "Found OCI8 trigger"
@@ -134,7 +134,7 @@ CONFIG
         puts "Found SAP HANA trigger"
         install_sap_hana_binaries
       end
-      puts "\nAFTER: Bundle Config is #{File.read(dot_bundle_config_file)}"
+      puts "\nAFTER:  FREETDS_DIR is #{ENV['FREETDS_DIR']}"
       puts "Done building native gems."
     end
     
