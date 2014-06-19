@@ -104,6 +104,7 @@ module LanguagePack
         existing_config = File.read(dot_bundle_config_file)
         File.open(dot_bundle_config_file, 'a') {|f| f.write(gem_configuration_to_append) } unless existing_config.include?(key_to_check_for)
       else
+        FileUtils.mkdir_p(dot_bundle)
         File.open(dot_bundle_config_file, 'w') do |f|
           f.write <<-CONFIG
 ---
@@ -129,7 +130,7 @@ CONFIG
     end
     
     def dot_bundle 
-      File.join(Dir.pwd,'.bundle')
+      File.join(ARGV[0],'.bundle')
     end
     
     def build_native_gems
