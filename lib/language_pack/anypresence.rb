@@ -33,7 +33,7 @@ module LanguagePack
       if uses_freetds?
         ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}/lib" # Needed to load resulting SO
         ld_library_vars << "#{FREETDS_DIR}/lib" # Needed for build
-        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
+#        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       end
       
       if uses_sap_hana?
@@ -72,8 +72,8 @@ module LanguagePack
       puts "Downloading FreeTDS package for SQL Server"
       result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
-        puts "Setting environment variable for FreeTDS #{FREETDS_DIR}"
-        ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
+        puts "Creating Bundler configuration file for SQL Server"
+#        ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
         File.open(dot_bundle_config_file, 'a') do |f|
           f.write <<-CONFIG
 BUNDLE_BUILD__TINY_TDS: --with-freetds-dir=#{FREETDS_DIR_FOR_RELEASE}
