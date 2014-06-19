@@ -72,8 +72,8 @@ module LanguagePack
       puts "Downloading FreeTDS package for SQL Server"
       result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
-        puts "Setting environment variable for FreeTDS #{FREETDS_DIR_FOR_RELEASE}"
-        ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
+        puts "Setting environment variable for FreeTDS #{FREETDS_DIR}"
+        ENV["FREETDS_DIR"] = FREETDS_DIR
       else
         raise "Failed to install FreeTDS binaries"
       end
