@@ -74,6 +74,10 @@ module LanguagePack
       if $?.success?
         puts "Setting environment variable for FreeTDS #{FREETDS_DIR}"
         ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
+        File.open(dot_bundle_config_file, 'w') do |f|
+          f.write <<-CONFIG
+BUNDLE_BUILD__TINY_TDS: --with-freetds-dir=#{FREETDS_DIR_FOR_RELEASE}
+CONFIG
       else
         raise "Failed to install FreeTDS binaries"
       end
@@ -118,23 +122,23 @@ CONFIG
     
     def build_native_gems
       puts "Building native gems..."
-      puts "\nBEFORE: FREETDS_DIR is #{ENV['FREETDS_DIR']}"
       
       if uses_oci8?
         puts "Found OCI8 trigger"
         install_oci8_binaries 
       end
 
+      if uses_sap_hana?
+        puts "Found SAP HANA trigger"
+        install_sap_hana_binaries
+      end
+      
       if uses_freetds?
         puts "Found FreeTDS trigger"
         install_freetds_binaries
       end
 
-      if uses_sap_hana?
-        puts "Found SAP HANA trigger"
-        install_sap_hana_binaries
-      end
-      puts "\nAFTER:  FREETDS_DIR is #{ENV['FREETDS_DIR']}"
+      puts "\nAFTER:  Bundle config is #{File.read(dot_bundle_config_file)}"
       puts "Done building native gems."
     end
     
