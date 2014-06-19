@@ -73,10 +73,6 @@ module LanguagePack
       result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       if $?.success?
         puts "Setting environment variable for FreeTDS"
-        `ls -alh /app/vendor`
-#        ENV['FREETDS_DIR']=FREETDS_DIR
-        #`bundle config build.tiny_tds --with-freetds-include=#{FREETDS_DIR}/include --with-freetds-lib=#{FREETDS_DIR}/lib 2&>1`
-        raise "Error configuring FreeTDS! #{$?}" unless $?.success?
       else
         raise "Failed to install FreeTDS binaries"
       end
@@ -91,15 +87,13 @@ module LanguagePack
     end
 
     def install_sap_hana_binaries
-      `mkdir -p #{UNIX_ODBC_DIR_ABSOLUTE_PATH}` unless Dir.exists?(UNIX_ODBC_DIR_ABSOLUTE_PATH)
-      `mkdir -p #{UNIX_ODBC_DIR_FOR_RELEASE}` unless Dir.exists?(UNIX_ODBC_DIR_FOR_RELEASE)
-
-      result = `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_ABSOLUTE_PATH} -f - `
+      FileUtils.mkdir_p(UNIX_ODBC_DIR_FOR_RELEASE) unless Dir.exists?(UNIX_ODBC_DIR_FOR_RELEASE)
+      
+      `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
-        
-        `bundle config build.ruby-odbc --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/include --with-odbc-lib=#{UNIX_ODBC_DIR_ABSOLUTE_PATH}/lib 2&>1`
-        raise "Error configuring ODBC! #{$?}" unless $?.success?
+        success = append_config_to_dot_bundle_config_file(ruby_odbc_gem_bundle_key, ruby_odbc_gem_bundle_config)
+        raise "Error configuring ODBC!" unless success
       else
         raise "Failed to install SAP HANA binaries"
       end
@@ -122,12 +116,12 @@ CONFIG
       end
     end
     
-    def ruby_odbc_gem_bundle_key
-      'BUNDLE_BUILD__RUBY-ODBC'
+    def ruby_odbc_gem_bundle_config
+      "#{ruby_odbc_gem_bundle_key}: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib"
     end
     
-    def ruby_oci8_gem_bundle_key
-      'BUNDLE_BUILD__RUBY-OCI8'
+    def ruby_odbc_gem_bundle_key
+      'BUNDLE_BUILD__RUBY-ODBC'
     end
     
     def dot_bundle_config_file
