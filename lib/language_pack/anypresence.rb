@@ -31,8 +31,8 @@ module LanguagePack
       end
       
       if uses_freetds?
-        ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}/lib" # Needed to load resulting SO
-        ld_library_vars << FREETDS_DIR_FOR_RELEASE
+        ld_library_vars << "#{FREETDS_DIR}/lib" # Needed to load resulting SO
+        ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}/lib"
 #        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       end
       
