@@ -78,7 +78,7 @@ module LanguagePack
 #        ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
         File.open(dot_bundle_config_file, 'a') do |f|
           f.write <<-CONFIG
-BUNDLE_BUILD__TINY_TDS: --with-freetds-dir=#{FREETDS_DIR_FOR_RELEASE}
+BUNDLE_BUILD__TINY_TDS: --with-freetds-dir=#{FREETDS_DIR}
 CONFIG
         end
       else
