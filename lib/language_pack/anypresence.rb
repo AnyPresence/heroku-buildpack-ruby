@@ -32,7 +32,7 @@ module LanguagePack
       
       if uses_freetds?
         ld_library_vars << "#{FREETDS_DIR_FOR_RELEASE}/lib" # Needed to load resulting SO
-        ld_library_vars << "#{FREETDS_DIR}/lib" # Needed for build
+        ld_library_vars << FREETDS_DIR_FOR_RELEASE
 #        extra_vars["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
       end
       
@@ -68,15 +68,15 @@ module LanguagePack
     end
 
     def install_freetds_binaries
-      FileUtils.mkdir_p(FREETDS_DIR) unless Dir.exists?(FREETDS_DIR)
+      FileUtils.mkdir_p(FREETDS_DIR_FOR_RELEASE) unless Dir.exists?(FREETDS_DIR_FOR_RELEASE)
       puts "Downloading FreeTDS package for SQL Server"
-      result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
+      result = `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Creating Bundler configuration file for SQL Server"
 #        ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
         File.open(dot_bundle_config_file, 'a') do |f|
           f.write <<-CONFIG
-BUNDLE_BUILD__TINY_TDS: --with-freetds-dir=#{FREETDS_DIR}
+BUNDLE_BUILD__TINY_TDS: --with-freetds-dir=#{FREETDS_DIR_FOR_RELEASE}
 CONFIG
         end
       else
