@@ -74,10 +74,11 @@ module LanguagePack
       if $?.success?
         puts "Setting environment variable for FreeTDS #{FREETDS_DIR}"
         ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
-        File.open(dot_bundle_config_file, 'w') do |f|
+        File.open(dot_bundle_config_file, 'a') do |f|
           f.write <<-CONFIG
 BUNDLE_BUILD__TINY_TDS: --with-freetds-dir=#{FREETDS_DIR_FOR_RELEASE}
 CONFIG
+        end
       else
         raise "Failed to install FreeTDS binaries"
       end
