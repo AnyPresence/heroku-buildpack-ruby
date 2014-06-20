@@ -10,12 +10,11 @@ module LanguagePack
 
     FREETDS_TRIGGER_NAME = '.freetds.conf'
     FREETDS_TGZ_URL="#{CHAMELEON_S3_BUCKET}/freetds.tar.gz"
-    FREETDS_DIR = "#{ARGV[0]}/vendor/freetds"
+    FREETDS_DIR = "vendor/freetds"
     FREETDS_DIR_FOR_RELEASE = "/app/vendor/freetds"
 
     SAP_HANA_TRIGGER = '.odbc.ini'
     UNIX_ODBC_WITH_HANA_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/unixodbc.tar.gz"
-    UNIX_ODBC_DIR_ABSOLUTE_PATH = "#{ARGV[0]}/vendor/unixodbc"
     UNIX_ODBC_DIR_FOR_RELEASE = "/app/vendor/unixodbc"
     
     def merge_native_config_vars(vars={})
