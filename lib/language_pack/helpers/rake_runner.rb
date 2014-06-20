@@ -86,6 +86,7 @@ class LanguagePack::Helpers::RakeRunner
   end
 
   def load_rake_tasks!(options = {})
+    puts "Env is\n#{`env`}"
     out =  load_rake_tasks(options)
     msg =  "Could not detect rake tasks\n"
     msg << "ensure you can run `$ bundle exec rake -P` against your app with no environment variables present\n"
