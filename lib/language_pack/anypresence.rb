@@ -47,7 +47,7 @@ module LanguagePack
         new_ld_library_path = ld_library_vars.join(":")
         extra_vars.merge!("LD_LIBRARY_PATH" => new_ld_library_path) 
         `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{new_ld_library_path}`
-        ENV['LD_LIBRARY_PATH'] = new_ld_library_path
+        ENV['LD_LIBRARY_PATH'] = "#{ENV['LD_LIBRARY_PATH']}:#{new_ld_library_path}"
       end
       
       puts "Merging variables of #{extra_vars.inspect}" unless extra_vars.empty?
