@@ -60,8 +60,10 @@ module LanguagePack
 
     def install_oci8_binaries
       FileUtils.mkdir_p(ORACLE_INSTANT_CLIENT_DIR) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
+      FileUtils.mkdir_p(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE)
       puts "Downloading Oracle client package for OCI8"
-      result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
+      `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
+      `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Done"
       else
