@@ -5,7 +5,7 @@ module LanguagePack
 
     OCI8_TRIGGER_NAME = '.oracle.ini'
     ORACLE_INSTANT_CLIENT_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/instantclient_11_2_with_libaio_oci8.tar.gz"
-    ORACLE_INSTANT_CLIENT_DIR = "#{ARGV[0]}/vendor/instant_client_11_2"
+    ORACLE_INSTANT_CLIENT_DIR = "vendor/instant_client_11_2"
     ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE = "/app/vendor/instant_client_11_2"
 
     FREETDS_TRIGGER_NAME = '.freetds.conf'
@@ -25,7 +25,6 @@ module LanguagePack
       if uses_oci8?
         ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE # Needed to load resulting SO
         ld_library_vars << ORACLE_INSTANT_CLIENT_DIR # Needed for the actual build
-        ld_library_vars << "./vendor/instant_client_11_2"
         extra_vars["NLS_LANG"] = 'AMERICAN_AMERICA.UTF8'
         `export NLS_LANG='AMERICAN_AMERICA.UTF8'` # Needed for Rake tasks
         ENV['NLS_LANG'] = 'AMERICAN_AMERICA.UTF8'
