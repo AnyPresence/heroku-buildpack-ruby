@@ -24,7 +24,7 @@ module LanguagePack
       
       if uses_oci8?
         ld_library_vars << ORACLE_INSTANT_CLIENT_DIR_FOR_RELEASE # Needed to load resulting SO
-        ld_library_vars << ORACLE_INSTANT_CLIENT_DIR # Needed for the actual build
+#        ld_library_vars << ORACLE_INSTANT_CLIENT_DIR # Needed for the actual build
         extra_vars["NLS_LANG"] = 'AMERICAN_AMERICA.UTF8'
         `export NLS_LANG='AMERICAN_AMERICA.UTF8'` # Needed for Rake tasks
         ENV['NLS_LANG'] = 'AMERICAN_AMERICA.UTF8'
@@ -62,8 +62,9 @@ module LanguagePack
     def install_oci8_binaries
       FileUtils.mkdir_p(ORACLE_INSTANT_CLIENT_DIR) unless Dir.exists?(ORACLE_INSTANT_CLIENT_DIR)
       puts "Downloading Oracle client package for OCI8"
-      result = `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
+      `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
       if $?.success?
+        @bundle_build_lines << "BUNDLE_BUILD__RUBY-OCI8: --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR}"
         puts "Done"
       else
         raise "Failed to install OCI8 binaries"
@@ -104,16 +105,7 @@ CONFIG
       `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
-        FileUtils.mkdir_p(dot_bundle) unless Dir.exists?(dot_bundle)
-        File.open(dot_bundle_config_file, 'w') do |f|
-          f.write <<-CONFIG
----
-BUNDLE_PATH: vendor/bundle
-BUNDLE_DISABLE_SHARED_GEMS: '1'
-BUNDLE_CACHE_ALL: false
-BUNDLE_BUILD__RUBY-ODBC: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib
-CONFIG
-        end
+        @bundle_build_lines << "BUNDLE_BUILD__RUBY-ODBC: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib"
       else
         raise "Failed to install SAP HANA binaries"
       end
@@ -130,6 +122,8 @@ CONFIG
     def build_native_gems
       puts "Building native gems..."
       
+      @bundle_build_lines = []
+      
       if uses_oci8?
         puts "Found OCI8 trigger"
         install_oci8_binaries 
@@ -144,7 +138,20 @@ CONFIG
         puts "Found FreeTDS trigger"
         install_freetds_binaries
       end
-
+      
+      unless @bundle_build_lines.empty?
+        FileUtils.mkdir_p(dot_bundle) unless Dir.exists?(dot_bundle)
+        File.open(dot_bundle_config_file, 'w') do |f|
+          f.write <<-CONFIG
+---
+BUNDLE_PATH: vendor/bundle
+BUNDLE_DISABLE_SHARED_GEMS: '1'
+BUNDLE_CACHE_ALL: false
+#{@bundle_build_lines.join("\n")}
+CONFIG
+        end
+      end
+      
       puts "\nAFTER:  Bundle config is #{File.read(dot_bundle_config_file)}"
       puts "Done building native gems."
     end
