@@ -64,7 +64,7 @@ module LanguagePack
       puts "Downloading Oracle client package for OCI8"
       `curl #{ORACLE_INSTANT_CLIENT_TGZ_URL} -s -o - | tar -xz -C #{ORACLE_INSTANT_CLIENT_DIR} -f - `
       if $?.success?
-        @bundle_build_lines << "BUNDLE_BUILD__RUBY-OCI8: --with-instant-client=#{ORACLE_INSTANT_CLIENT_DIR}"
+        @bundle_build_lines << "BUNDLE_BUILD__RUBY-OCI8: --with-opt-dir=#{ORACLE_INSTANT_CLIENT_DIR}"
         puts "Done"
       else
         raise "Failed to install OCI8 binaries"
