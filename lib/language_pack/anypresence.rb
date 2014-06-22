@@ -49,8 +49,6 @@ module LanguagePack
         ENV['LD_LIBRARY_PATH'] = "#{ENV['LD_LIBRARY_PATH']}:#{new_ld_library_path}"
       end
       
-      puts "Merging variables of #{extra_vars.inspect}" unless extra_vars.empty?
-      
       vars.merge!(extra_vars) unless extra_vars.empty?
     end
     
@@ -78,14 +76,8 @@ module LanguagePack
       `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR} -f - `
       `curl #{FREETDS_TGZ_URL} -s -o - | tar -xz -C #{FREETDS_DIR_FOR_RELEASE} -f - `
       if $?.success?
-        puts "Creating Bundler configuration file for SQL Server"
+        puts "Setting environment variable for SQL Server"
         ENV["FREETDS_DIR"] = FREETDS_DIR_FOR_RELEASE
-=begin
-        File.open(dot_bundle_config_file, 'a') do |f|
-          f.write <<-CONFIG
-BUNDLE_BUILD__TINY_TDS: --with-freetds-dir=#{FREETDS_DIR_FOR_RELEASE}
-CONFIG
-=end
       else
         raise "Failed to install FreeTDS binaries"
       end
@@ -146,7 +138,6 @@ CONFIG
         install_freetds_binaries
       end
 
-      puts "\nAFTER:  Bundle config is #{File.read(dot_bundle_config_file)}"
       puts "Done building native gems."
     end
     
