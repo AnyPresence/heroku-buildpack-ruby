@@ -93,7 +93,7 @@ module LanguagePack
 
     def install_sap_hana_binaries
       FileUtils.mkdir_p(UNIX_ODBC_DIR_FOR_RELEASE) unless Dir.exists?(UNIX_ODBC_DIR_FOR_RELEASE)
-      
+      puts "Downloading package for SAP HANA"
       `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
