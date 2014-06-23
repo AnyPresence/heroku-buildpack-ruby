@@ -101,7 +101,7 @@ module LanguagePack
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
         `bundle config build.ruby-odbc --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib`
-        raise "Error building bundle config for HANA!" unless $?.success?
+        raise "Error building bundle config for HANA!"# unless $?.success?
       else
         raise "Failed to install SAP HANA binaries"
       end
