@@ -100,7 +100,7 @@ module LanguagePack
       `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Installing Ruby ODBC for SAP HANA"
-        `bundle exec gem install ruby-odbc -- --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib`
+        `gem install ruby-odbc -- --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib`
         raise "Error building bundle config for HANA!" unless $?.success?
       else
         raise "Failed to install SAP HANA binaries"
