@@ -86,7 +86,6 @@ class LanguagePack::Helpers::RakeRunner
   end
 
   def load_rake_tasks!(options = {})
-    puts "Env is\n#{`env`}\nLinker says #{`ldd vendor/bundle/ruby/2.1.0/extensions/x86_64-linux/2.1.0-static/ruby-oci8-2.1.7/oci8lib_210.so`}"
     out =  load_rake_tasks(options)
     msg =  "Could not detect rake tasks\n"
     msg << "ensure you can run `$ bundle exec rake -P` against your app with no environment variables present\n"
