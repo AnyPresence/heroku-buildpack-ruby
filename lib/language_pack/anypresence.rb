@@ -101,20 +101,12 @@ module LanguagePack
       if $?.success?
         puts "Installing Ruby ODBC for SAP HANA"
         `gem install ruby-odbc -- --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib`
-        raise "Error building bundle config for HANA!" unless $?.success?
+        raise "Error installing Ruby ODBC gem for SAP HANA!" unless $?.success?
       else
         raise "Failed to install SAP HANA binaries"
       end
     end
         
-    def dot_bundle_config_file
-      File.join(dot_bundle,'config')
-    end
-    
-    def dot_bundle 
-      File.join(ARGV[0],'.bundle')
-    end
-    
     def build_native_gems
       puts "Building native gems..."
       
