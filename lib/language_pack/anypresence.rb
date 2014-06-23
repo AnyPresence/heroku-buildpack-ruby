@@ -15,6 +15,7 @@ module LanguagePack
 
     SAP_HANA_TRIGGER = '.odbc.ini'
     UNIX_ODBC_WITH_HANA_TGZ_URL = "#{CHAMELEON_S3_BUCKET}/unixodbc.tar.gz"
+    UNIX_ODBC_DIR = 'vendor/unixodbc'
     UNIX_ODBC_DIR_FOR_RELEASE = "/app/vendor/unixodbc"
     
     def merge_native_config_vars(vars={})
@@ -93,7 +94,9 @@ module LanguagePack
 
     def install_sap_hana_binaries
       FileUtils.mkdir_p(UNIX_ODBC_DIR_FOR_RELEASE) unless Dir.exists?(UNIX_ODBC_DIR_FOR_RELEASE)
+      FileUtils.mkdir_p(UNIX_ODBC_DIR) unless Dir.exists?(UNIX_ODBC_DIR)
       puts "Downloading package for SAP HANA"
+      `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR} -f - `
       `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
