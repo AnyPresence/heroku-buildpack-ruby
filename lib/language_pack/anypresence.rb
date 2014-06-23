@@ -100,16 +100,8 @@ module LanguagePack
       `curl #{UNIX_ODBC_WITH_HANA_TGZ_URL} -s -o - | tar -xz -C #{UNIX_ODBC_DIR_FOR_RELEASE} -f - `
       if $?.success?
         puts "Creating Bundler configuration file for SAP HANA"
-        FileUtils.mkdir_p(dot_bundle) unless Dir.exists?(dot_bundle)
-        File.open(dot_bundle_config_file, 'w') do |f|
-          f.write <<-CONFIG
----
-BUNDLE_PATH: vendor/bundle
-BUNDLE_DISABLE_SHARED_GEMS: '1'
-BUNDLE_CACHE_ALL: false
-BUNDLE_BUILD__RUBY-ODBC: --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib
-CONFIG
-        end
+        `bundle config build.ruby-odbc -- --enable-dlopen --with-odbc-include=#{UNIX_ODBC_DIR_FOR_RELEASE}/include  --with-odbc-lib=#{UNIX_ODBC_DIR_FOR_RELEASE}/lib`
+        raise "Error building bundle config for HANA!" unless $?.success?
       else
         raise "Failed to install SAP HANA binaries"
       end
